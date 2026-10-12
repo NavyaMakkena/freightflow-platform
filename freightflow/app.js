@@ -1,0 +1,8 @@
+const form=document.querySelector('#create');
+const rows=document.querySelector('#rows');
+const message=document.querySelector('#message');
+const next={CREATED:'DISPATCHED',DISPATCHED:'IN_TRANSIT',IN_TRANSIT:'DELIVERED'};
+async function api(path,opts={}){const r=await fetch(path,opts);const data=await r.json();if(!r.ok)throw Error(data.message||'Request failed');return data}
+async function refresh(){rows.replaceChildren();try{const data=await api('/api/shipments');for(const s of data.shipments){const tr=document.createElement('tr');const cells=[s.id.slice(0,8),s.customer,`${s.origin} → ${s.destination}`,String(s.pieces),s.status];for(const value of cells){const td=document.createElement('td');td.textContent=value;tr.append(td)}const td=document.createElement('td');if(next[s.status]){const b=document.createElement('button');b.textContent=`→ ${next[s.status]}`;b.onclick=async()=>{try{await api(`/api/shipments/${s.id}/status`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({status:next[s.status],expected_version:s.version})});await refresh()}catch(e){message.textContent=e.message}};td.append(b)}tr.append(td);rows.append(tr)}}catch(e){message.textContent=e.message}}
+form.addEventListener('submit',async e=>{e.preventDefault();const values=Object.fromEntries(new FormData(form));values.pieces=Number(values.pieces);try{const s=await api('/api/shipments',{method:'POST',headers:{'Content-Type':'application/json','Idempotency-Key':crypto.randomUUID()},body:JSON.stringify(values)});message.textContent=`Created shipment ${s.id}`;form.reset();await refresh()}catch(err){message.textContent=err.message}});
+document.querySelector('#refresh').onclick=refresh;refresh();

@@ -1,0 +1,12 @@
+test_cancel_and_illegal_transition (test_end_to_end.EndToEnd.test_cancel_and_illegal_transition) ... ok
+test_complete_delivery_lifecycle (test_end_to_end.EndToEnd.test_complete_delivery_lifecycle) ... ok
+test_health_and_dashboard (test_end_to_end.EndToEnd.test_health_and_dashboard) ... ok
+test_idempotent_create (test_end_to_end.EndToEnd.test_idempotent_create) ... ok
+test_optimistic_locking (test_end_to_end.EndToEnd.test_optimistic_locking) ... ok
+test_persistence_reopen (test_end_to_end.EndToEnd.test_persistence_reopen) ... ok
+test_validation_and_not_found (test_end_to_end.EndToEnd.test_validation_and_not_found) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.535s
+
+OK
